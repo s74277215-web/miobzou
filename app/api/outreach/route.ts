@@ -1,0 +1,2 @@
+import {sendOutreach,suppress} from "../../../lib/server/outreach";
+export async function POST(req:Request){try{const body=await req.json();if(body.action==="suppress"){suppress(String(body.identifier||""));return Response.json({ok:true,suppressed:true})}if(!body.leadId||!body.channel||!body.recipient||!body.message)return Response.json({error:"leadId, channel, recipient and message are required"},{status:400});return Response.json(await sendOutreach(body))}catch(e){return Response.json({error:e instanceof Error?e.message:"Outreach failed"},{status:500})}}
