@@ -1,7 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import {Lead,Message,Stage} from "../lib/types";
-import {seedLeads} from "../lib/store";
 import {LayoutDashboard,Users,MessageSquare,Settings,Search,Plus,ArrowUpRight,Bot,ShieldCheck,Send,UserRoundCheck,Activity} from "lucide-react";
 
 const stages:Stage[]=["new","contacted","qualified","handoff","won","lost"];
@@ -9,8 +8,8 @@ const stageLabel:Record<Stage,string>={new:"Nouveau",contacted:"Contacté",quali
 
 export default function Home(){
  const [section,setSection]=useState("overview");
- const [leads,setLeads]=useState<Lead[]>(seedLeads);
- const [selected,setSelected]=useState<Lead>(seedLeads[0]);
+ const [leads,setLeads]=useState<Lead[]>([]);
+ const [selected,setSelected]=useState<Lead | null>(null);
  const [messages,setMessages]=useState<Message[]>([]);
  const [query,setQuery]=useState("");
  const [toast,setToast]=useState(""); const [aiBusy,setAiBusy]=useState(false);
