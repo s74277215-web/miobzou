@@ -1,0 +1,2 @@
+import {ensureSchema,dbQuery} from "../../../lib/server/db";
+export async function GET(req:Request){await ensureSchema();const id=new URL(req.url).searchParams.get("leadId");if(!id)return Response.json({error:"leadId is required"},{status:400});const messages=await dbQuery<any>("select id,lead_id as \"leadId\",sender,text,channel,external_id as \"externalId\",created_at as at from miobzou_messages where lead_id=$1 order by created_at asc",[id]);return Response.json({messages})}
