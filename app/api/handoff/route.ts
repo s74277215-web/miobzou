@@ -1,0 +1,2 @@
+import {audit} from "../../../lib/server/audit";import {shouldHandoff} from "../../../lib/server/scoring";
+export async function POST(req:Request){const body=await req.json();const ok=shouldHandoff(Number(body.score)||0,body.signals||[]);if(!ok)return Response.json({handoff:false,reason:"qualification threshold not reached"});const event=audit({type:"lead.handoff",leadId:body.leadId,actor:"system",metadata:{summary:body.summary||"",score:body.score}});return Response.json({handoff:true,event})}
