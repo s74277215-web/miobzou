@@ -30,3 +30,30 @@ The core architecture is ready for integration, but a real multi-user deployment
 ## Architecture
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [SECURITY.md](SECURITY.md).
+
+
+## Production close-out
+
+The app now includes:
+- private dashboard authentication via `DASHBOARD_PASSWORD`;
+- PostgreSQL-backed leads, messages, jobs, events and suppressions;
+- authenticated lead/message/notification API routes;
+- inbound AI qualification and human handoff before payment/contract;
+- outbound quiet hours, opt-out suppression, recipient rate limits and minimum delay;
+- automation locking with retry/backoff;
+- Meta/WhatsApp webhook ingestion and provider adapters.
+
+### Required deployment variables
+Set `DASHBOARD_PASSWORD`, `DATABASE_URL`, `OPENAI_API_KEY` and `AUTOMATION_SECRET` in the hosting environment. Add Meta/WhatsApp, Instagram and email credentials only for channels you actually connect.
+
+### Final external setup
+1. Deploy the Next.js app over HTTPS.
+2. Create a managed PostgreSQL database and set `DATABASE_URL`.
+3. Set a strong `DASHBOARD_PASSWORD`; never commit it.
+4. Set `OPENAI_API_KEY` and the selected model.
+5. Configure Meta webhooks/WhatsApp credentials if WhatsApp is enabled.
+6. Configure the Instagram/email provider adapter if those channels are enabled.
+7. Schedule authenticated POST requests to `/api/automation/run` every few minutes with `Authorization: Bearer <AUTOMATION_SECRET>`.
+8. Verify the production health endpoints and then start with a small, consent-aware outreach volume.
+
+The application does not perform payment or contract actions automatically; commercial commitment remains a human step.
