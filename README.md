@@ -2,39 +2,31 @@
 
 AI Revenue Operating System for a web agency.
 
-## What is included
+## Included
 
-- Prospect CRM with intent scoring and pipeline stages
-- AI inbox / conversation workspace
-- Qualification fields: need, budget, role, channel
-- Explicit human-handoff boundary before pricing/payment
-- Provider configuration surface for OpenAI, Anthropic or a custom webhook
-- Responsive premium dashboard
-- Activity and audit-oriented data model
+- Premium responsive command center
+- Prospect pipeline with qualification and intent scoring
+- AI inbox connected to a server-side provider gateway
+- OpenAI / Anthropic / custom webhook adapter
+- AI extraction endpoint for structured qualification
+- Handoff endpoint with a hard pre-payment boundary
+- Outreach webhook adapter with suppression and per-recipient rate limiting
+- Audit event endpoint
+- Security and architecture documentation
 - No dependency on the user's other repositories
+
+## Runtime
+
+1. Put provider credentials in environment variables; never in browser code.
+2. Start the app with `npm install && npm run dev`.
+3. Configure `AI_PROVIDER` and the matching secret.
+4. Configure `OUTREACH_WEBHOOK_URL` only when a compliant channel/automation provider is ready.
+5. Keep human approval as the final step for pricing, contracts and payment.
+
+## Important production hardening
+
+The core architecture is ready for integration, but a real multi-user deployment still needs durable PostgreSQL storage, authentication/authorization, encrypted secrets, background job queues, provider-specific consent/suppression handling and observability. Those are infrastructure concerns rather than browser UI features and should not be faked with local state.
 
 ## Architecture
 
-The application is intentionally split into domain types, state/seed data, UI and the future server-side AI adapter layer.
-
-### Production AI adapter
-
-Do **not** put provider API keys in browser code. Connect the Settings surface to a server-side route or secret-managed deployment and implement:
-
-1. Prospect discovery adapter
-2. Website/company enrichment adapter
-3. AI conversation adapter
-4. Lead qualification / scoring adapter
-5. Handoff notification adapter
-6. Audit event persistence
-
-The hard business boundary is: AI may prospect and qualify, but a human takes over before payment, contract acceptance or any irreversible commercial action.
-
-## Run
-
-```bash
-npm install
-npm run dev
-```
-
-Then open http://localhost:3000.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [SECURITY.md](SECURITY.md).
