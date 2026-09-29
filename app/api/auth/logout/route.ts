@@ -1,0 +1,2 @@
+import {cookieName} from "../../../../lib/server/auth";
+export async function POST(){const res=Response.json({ok:true});res.headers.append("Set-Cookie",`${cookieName}=; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=0`);return res}
