@@ -1,2 +1,2 @@
-import {generateAI} from "../../../lib/server/ai";import {SALES_SYSTEM} from "../../../lib/server/prompts";import {audit} from "../../../lib/server/audit";
+import {generateAI} from "../../../../lib/server/ai";import {SALES_SYSTEM} from "../../../../lib/server/prompts";import {audit} from "../../../../lib/server/audit";
 export async function POST(req:Request){try{const body=await req.json();if(!Array.isArray(body.messages))return Response.json({error:"messages required"},{status:400});const text=await generateAI({system:SALES_SYSTEM,messages:body.messages});audit({type:"ai.response",leadId:body.leadId,actor:"ai",metadata:{length:text.length}});return Response.json({text})}catch(e){return Response.json({error:e instanceof Error?e.message:"AI error"},{status:500})}}
