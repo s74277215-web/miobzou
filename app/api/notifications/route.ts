@@ -1,0 +1,2 @@
+import {ensureSchema,dbQuery} from "../../../lib/server/db";
+export async function GET(){await ensureSchema();const events=await dbQuery<any>("select id,type,lead_id as \"leadId\",metadata,created_at from miobzou_events where type in ('lead.handoff_required','prospect.opted_out','lead.qualified') order by created_at desc limit 50");return Response.json({events})}
