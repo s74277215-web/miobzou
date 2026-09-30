@@ -12,7 +12,7 @@ export default function Home(){
  const [selected,setSelected]=useState<Lead | null>(null);
  const [messages,setMessages]=useState<Message[]>([]);
  const [query,setQuery]=useState("");
- const [toast,setToast]=useState(""); const [aiBusy,setAiBusy]=useState(false);
+ const [toast,setToast]=useState(""); const [aiBusy,setAiBusy]=useState(false); const [prospectBusy,setProspectBusy]=useState(false);
  const notify=(s:string)=>{setToast(s);setTimeout(()=>setToast(""),2400)};
  useEffect(()=>{(async()=>{try{const r=await fetch("/api/leads");const d=await r.json();if(r.ok&&Array.isArray(d.leads)){setLeads(d.leads);if(d.leads[0])setSelected(d.leads[0]);}}catch{}})()},[]);
  useEffect(()=>{if(!selected?.id)return;(async()=>{try{const r=await fetch("/api/messages?leadId="+encodeURIComponent(selected.id));const d=await r.json();if(r.ok&&Array.isArray(d.messages))setMessages(d.messages);}catch{}})()},[selected?.id]);
