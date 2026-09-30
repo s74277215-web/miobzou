@@ -10,8 +10,22 @@ async function openaiRequest(body:Record<string,unknown>){
   return r.json();
 }
 
+async function openrouterRequest(body:Record<string,unknown>){
+  const key=env("OPENROUTER_API_KEY",true);
+  const model=env("OPENROUTER_MODEL")||"openrouter/free";
+  const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:`Bearer ${key}`,"http-referer":"https://miobzou.vercel.app","x-title":"Miobzou"},body:JSON.stringify({...body,model})});
+  if(!r.ok)throw new Error(`OpenRouter request failed: ${r.status} ${await r.text()}`);
+  return r.json();
+}
+
+function openrouterText(d:any){return d?.choices?.[0]?.message?.content||"";}
+
 export async function generateAI(req:AIRequest){
   const provider=env("AI_PROVIDER")||"openai";
+  if(provider==="openrouter"){
+    const d=await openrouterRequest({messages:[{role:"system",content:req.system},...req.messages],temperature:req.temperature??0.4});
+    return openrouterText(d).trim();
+  }
   if(provider==="anthropic")return anthropic(req);
   if(provider==="custom")return custom(req);
   const d=await openaiRequest({instructions:req.system,input:req.messages.map(m=>({role:m.role,content:[{type:"input_text",text:m.content}]})),temperature:req.temperature??0.4});
